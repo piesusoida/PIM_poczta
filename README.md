@@ -20,4 +20,5 @@ do upgradu:
 - front end ulepszenie
 - wskrzesić supabase
 - diagramy C4
-- git
+- git (done)
+- ostateczne ReadMe raport maks 2 strony
