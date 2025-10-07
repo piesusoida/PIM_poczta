@@ -22,3 +22,5 @@ do upgradu:
 - diagramy C4
 - git (done)
 - ostateczne ReadMe raport maks 2 strony
+
+test test test
