@@ -12,15 +12,8 @@ terminy:
 konsultacje:
 
 - w trakcie zajęć (po dogadaniu się mailem)
--
 
-do upgradu:
+Mockup
+https://mockitt.com/proto/u7lMU0lLt3rq2teDhoRWW/sharing?view_mode=read_only #Progres-分享
 
-- oddzielenie backendu od bazy danych (fast api) authrorization (wszystko śmiga ale osobno od apki, trzeba to jeszcze połączyć)
-- front end ulepszenie
-- wskrzesić supabase (done)
-- diagramy C4
-- git (done)
-- ostateczne ReadMe raport maks 2 strony
 
-test test test
