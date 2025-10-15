@@ -27,6 +27,3 @@ C2
 C3
 <img width="2126" height="1282" alt="image" src="https://github.com/user-attachments/assets/505f5a5f-72e3-442c-b88b-98189323d3bf" />
 
-
-
-test test 
