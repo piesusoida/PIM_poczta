@@ -1,41 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
-} from 'react-native';
+} from "react-native";
 import {
   Text,
   TextInput as PaperTextInput,
   Button,
   Card,
   Divider,
-  useTheme,
   ActivityIndicator,
   Portal,
   Dialog,
   Paragraph,
-} from 'react-native-paper';
-import { useRouter } from 'expo-router';
-import { useAuth } from '@/contexts/AuthContext';
+} from "react-native-paper";
+import { useRouter } from "expo-router";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function RegisterScreen() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
-  const [dialogTitle, setDialogTitle] = useState('');
-  const [dialogMessage, setDialogMessage] = useState('');
+  const [dialogTitle, setDialogTitle] = useState("");
+  const [dialogMessage, setDialogMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const { signUp } = useAuth();
   const router = useRouter();
 
-  const showDialog = (title: string, message: string, success: boolean = false) => {
+  const showDialog = (
+    title: string,
+    message: string,
+    success: boolean = false
+  ) => {
     setDialogTitle(title);
     setDialogMessage(message);
     setIsSuccess(success);
@@ -45,55 +48,55 @@ export default function RegisterScreen() {
   const hideDialog = () => {
     setDialogVisible(false);
     if (isSuccess) {
-      router.replace('/(tabs)');
+      router.replace("/(tabs)");
     }
   };
 
   const handleRegister = async () => {
     if (!email || !password || !confirmPassword) {
-      showDialog('Error', 'Please fill in all fields');
+      showDialog("Error", "Please fill in all fields");
       return;
     }
 
     if (password !== confirmPassword) {
-      showDialog('Error', 'Passwords do not match');
+      showDialog("Error", "Passwords do not match");
       return;
     }
 
     if (password.length < 6) {
-      showDialog('Error', 'Password must be at least 6 characters long');
+      showDialog("Error", "Password must be at least 6 characters long");
       return;
     }
 
     setLoading(true);
     try {
       await signUp(email, password);
-      showDialog('Success', 'Account created successfully!', true);
+      showDialog("Success", "Account created successfully!", true);
     } catch (error: any) {
-      console.error('Registration error:', error);
-      let errorMessage = 'An error occurred during registration';
-      
+      console.error("Registration error:", error);
+      let errorMessage = "An error occurred during registration";
+
       // Parse Firebase error codes
       if (error.code) {
         switch (error.code) {
-          case 'auth/email-already-in-use':
-            errorMessage = 'This email is already registered';
+          case "auth/email-already-in-use":
+            errorMessage = "This email is already registered";
             break;
-          case 'auth/invalid-email':
-            errorMessage = 'Invalid email address format';
+          case "auth/invalid-email":
+            errorMessage = "Invalid email address format";
             break;
-          case 'auth/operation-not-allowed':
-            errorMessage = 'Email/password accounts are not enabled';
+          case "auth/operation-not-allowed":
+            errorMessage = "Email/password accounts are not enabled";
             break;
-          case 'auth/weak-password':
-            errorMessage = 'Password is too weak';
+          case "auth/weak-password":
+            errorMessage = "Password is too weak";
             break;
           default:
             errorMessage = error.message || errorMessage;
         }
       }
-      
-      showDialog('Registration Failed', errorMessage);
+
+      showDialog("Registration Failed", errorMessage);
     } finally {
       setLoading(false);
     }
@@ -102,20 +105,18 @@ export default function RegisterScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardAvoidingView}
       >
         <View style={styles.content}>
-          {/* Header */}
-          <View style={styles.headerContainer}>
-            <Text variant="headlineMedium" style={styles.headerText}>
-              Create your account!
-            </Text>
-          </View>
-
           {/* Register Form */}
           <Card style={styles.formCard}>
             <Card.Content style={styles.cardContent}>
+              <View style={styles.headerContainer}>
+                <Text variant="headlineMedium" style={styles.headerText}>
+                  Join us!
+                </Text>
+              </View>
               {/* Email Input */}
               <PaperTextInput
                 mode="outlined"
@@ -142,7 +143,7 @@ export default function RegisterScreen() {
                 autoCorrect={false}
                 right={
                   <PaperTextInput.Icon
-                    icon={showPassword ? 'eye-off' : 'eye'}
+                    icon={showPassword ? "eye-off" : "eye"}
                     onPress={() => setShowPassword(!showPassword)}
                     disabled={loading}
                   />
@@ -163,7 +164,7 @@ export default function RegisterScreen() {
                 autoCorrect={false}
                 right={
                   <PaperTextInput.Icon
-                    icon={showConfirmPassword ? 'eye-off' : 'eye'}
+                    icon={showConfirmPassword ? "eye-off" : "eye"}
                     onPress={() => setShowConfirmPassword(!showConfirmPassword)}
                     disabled={loading}
                   />
@@ -180,7 +181,7 @@ export default function RegisterScreen() {
                 contentStyle={styles.buttonContent}
                 disabled={loading}
               >
-                {loading ? <ActivityIndicator color="#fff" /> : 'Register'}
+                {loading ? <ActivityIndicator color="#fff" /> : "Register"}
               </Button>
 
               {/* Divider */}
@@ -240,23 +241,23 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#1c1b1f",
   },
   keyboardAvoidingView: {
     flex: 1,
   },
   content: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingHorizontal: 16,
   },
   headerContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 32,
   },
   headerText: {
-    textAlign: 'center',
-    fontWeight: '600',
+    textAlign: "center",
+    fontWeight: "600",
   },
   formCard: {
     marginHorizontal: 0,
@@ -277,8 +278,8 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   dividerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 24,
   },
   divider: {
@@ -286,15 +287,15 @@ const styles = StyleSheet.create({
   },
   dividerText: {
     marginHorizontal: 16,
-    color: '#666',
+    color: "#666",
   },
   googleButton: {
     marginBottom: 8,
   },
   loginLinkContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 16,
   },
 });

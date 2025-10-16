@@ -1,34 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
-} from 'react-native';
+} from "react-native";
 import {
   Text,
   TextInput as PaperTextInput,
   Button,
   Card,
   Divider,
-  useTheme,
   ActivityIndicator,
   Portal,
   Dialog,
   Paragraph,
-} from 'react-native-paper';
-import { useRouter } from 'expo-router';
-import { useAuth } from '@/contexts/AuthContext';
+} from "react-native-paper";
+import { useRouter } from "expo-router";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
-  const [dialogTitle, setDialogTitle] = useState('');
-  const [dialogMessage, setDialogMessage] = useState('');
+  const [dialogTitle, setDialogTitle] = useState("");
+  const [dialogMessage, setDialogMessage] = useState("");
   const { signIn, signInWithGoogle } = useAuth();
   const router = useRouter();
 
@@ -44,7 +43,7 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      showDialog('Error', 'Please fill in all fields');
+      showDialog("Error", "Please fill in all fields");
       return;
     }
 
@@ -52,38 +51,38 @@ export default function LoginScreen() {
     try {
       await signIn(email, password);
       // Navigate to main app after successful login
-      router.replace('/(tabs)');
+      router.replace("/(tabs)");
     } catch (error: any) {
-      console.error('Login error:', error);
-      let errorMessage = 'An error occurred during login';
-      
+      console.error("Login error:", error);
+      let errorMessage = "An error occurred during login";
+
       // Parse Firebase error codes
       if (error.code) {
         switch (error.code) {
-          case 'auth/invalid-email':
-            errorMessage = 'Invalid email address format';
+          case "auth/invalid-email":
+            errorMessage = "Invalid email address format";
             break;
-          case 'auth/user-disabled':
-            errorMessage = 'This account has been disabled';
+          case "auth/user-disabled":
+            errorMessage = "This account has been disabled";
             break;
-          case 'auth/user-not-found':
-            errorMessage = 'No account found with this email';
+          case "auth/user-not-found":
+            errorMessage = "No account found with this email";
             break;
-          case 'auth/wrong-password':
-            errorMessage = 'Incorrect password';
+          case "auth/wrong-password":
+            errorMessage = "Incorrect password";
             break;
-          case 'auth/invalid-credential':
-            errorMessage = 'Invalid email or password';
+          case "auth/invalid-credential":
+            errorMessage = "Invalid email or password";
             break;
-          case 'auth/too-many-requests':
-            errorMessage = 'Too many failed attempts. Please try again later';
+          case "auth/too-many-requests":
+            errorMessage = "Too many failed attempts. Please try again later";
             break;
           default:
             errorMessage = error.message || errorMessage;
         }
       }
-      
-      showDialog('Login Failed', errorMessage);
+
+      showDialog("Login Failed", errorMessage);
     } finally {
       setLoading(false);
     }
@@ -94,28 +93,28 @@ export default function LoginScreen() {
     try {
       await signInWithGoogle();
       // Navigate to main app after successful login
-      router.replace('/(tabs)');
+      router.replace("/(tabs)");
     } catch (error: any) {
-      console.error('Google login error:', error);
-      let errorMessage = 'An error occurred during Google login';
-      
+      console.error("Google login error:", error);
+      let errorMessage = "An error occurred during Google login";
+
       // Parse error codes
       if (error.code) {
         switch (error.code) {
-          case '-5': // SIGN_IN_CANCELLED
-            errorMessage = 'Sign-in was cancelled';
+          case "-5": // SIGN_IN_CANCELLED
+            errorMessage = "Sign-in was cancelled";
             break;
-          case '12501': // SIGN_IN_CANCELLED (Android)
-            errorMessage = 'Sign-in was cancelled';
+          case "12501": // SIGN_IN_CANCELLED (Android)
+            errorMessage = "Sign-in was cancelled";
             break;
-          case 'SIGN_IN_CANCELLED':
-            errorMessage = 'Sign-in was cancelled';
+          case "SIGN_IN_CANCELLED":
+            errorMessage = "Sign-in was cancelled";
             break;
-          case 'IN_PROGRESS':
-            errorMessage = 'Sign-in already in progress';
+          case "IN_PROGRESS":
+            errorMessage = "Sign-in already in progress";
             break;
-          case 'PLAY_SERVICES_NOT_AVAILABLE':
-            errorMessage = 'Google Play Services not available';
+          case "PLAY_SERVICES_NOT_AVAILABLE":
+            errorMessage = "Google Play Services not available";
             break;
           default:
             errorMessage = error.message || errorMessage;
@@ -123,10 +122,15 @@ export default function LoginScreen() {
       } else if (error.message) {
         errorMessage = error.message;
       }
-      
+
       // Don't show error if user cancelled
-      if (!error.code || (error.code !== '-5' && error.code !== '12501' && error.code !== 'SIGN_IN_CANCELLED')) {
-        showDialog('Google Login Failed', errorMessage);
+      if (
+        !error.code ||
+        (error.code !== "-5" &&
+          error.code !== "12501" &&
+          error.code !== "SIGN_IN_CANCELLED")
+      ) {
+        showDialog("Google Login Failed", errorMessage);
       }
     } finally {
       setLoading(false);
@@ -136,20 +140,18 @@ export default function LoginScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardAvoidingView}
       >
         <View style={styles.content}>
-          {/* Header */}
-          <View style={styles.headerContainer}>
-            <Text variant="headlineMedium" style={styles.headerText}>
-              Track your progress!
-            </Text>
-          </View>
-
           {/* Login Form */}
           <Card style={styles.formCard}>
             <Card.Content style={styles.cardContent}>
+              <View style={styles.headerContainer}>
+                <Text variant="headlineMedium" style={styles.headerText}>
+                  Track your progress!
+                </Text>
+              </View>
               {/* Email Input */}
               <PaperTextInput
                 mode="outlined"
@@ -176,7 +178,7 @@ export default function LoginScreen() {
                 autoCorrect={false}
                 right={
                   <PaperTextInput.Icon
-                    icon={showPassword ? 'eye-off' : 'eye'}
+                    icon={showPassword ? "eye-off" : "eye"}
                     onPress={() => setShowPassword(!showPassword)}
                     disabled={loading}
                   />
@@ -193,7 +195,7 @@ export default function LoginScreen() {
                 contentStyle={styles.buttonContent}
                 disabled={loading}
               >
-                {loading ? <ActivityIndicator color="#fff" /> : 'Login'}
+                {loading ? <ActivityIndicator color="#fff" /> : "Login"}
               </Button>
 
               {/* Divider */}
@@ -222,7 +224,7 @@ export default function LoginScreen() {
                 <Text variant="bodyMedium">Don't have an account? </Text>
                 <Button
                   mode="text"
-                  onPress={() => router.push('/(auth)/register')}
+                  onPress={() => router.push("/(auth)/register")}
                   disabled={loading}
                   compact
                 >
@@ -253,23 +255,23 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#1c1b1f",
   },
   keyboardAvoidingView: {
     flex: 1,
   },
   content: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingHorizontal: 16,
   },
   headerContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 32,
   },
   headerText: {
-    textAlign: 'center',
-    fontWeight: '600',
+    textAlign: "center",
+    fontWeight: "600",
   },
   formCard: {
     marginHorizontal: 0,
@@ -290,8 +292,8 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   dividerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 24,
   },
   divider: {
@@ -299,15 +301,15 @@ const styles = StyleSheet.create({
   },
   dividerText: {
     marginHorizontal: 16,
-    color: '#666',
+    color: "#666",
   },
   googleButton: {
     marginBottom: 8,
   },
   registerLinkContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 16,
   },
 });

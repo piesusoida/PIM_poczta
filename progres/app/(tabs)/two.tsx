@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { Button, Portal, Dialog, Paragraph } from 'react-native-paper';
-import { useRouter } from 'expo-router';
+import { useRouter, Redirect } from 'expo-router';
 import { useState } from 'react';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
@@ -8,10 +8,15 @@ import { Text, View } from '@/components/Themed';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function TabTwoScreen() {
-  const { signOut, user } = useAuth();
+  const { signOut, user, loading } = useAuth();
   const router = useRouter();
   const [dialogVisible, setDialogVisible] = useState(false);
   const [errorDialogVisible, setErrorDialogVisible] = useState(false);
+
+  // Redirect to login if not authenticated
+  if (!loading && !user) {
+    return <Redirect href="/(auth)/login" />;
+  }
 
   const showLogoutDialog = () => {
     setDialogVisible(true);

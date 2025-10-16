@@ -12,6 +12,7 @@ import {
 } from 'firebase/auth';
 import { auth } from '@/config/firebase';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { createUserDocument } from '@/config/firestore';
 
 interface AuthContextType {
   user: User | null;
@@ -54,7 +55,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (email: string, password: string) => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      // Utwórz dokument użytkownika w Firestore
+      await createUserDocument(userCredential.user);
     } catch (error: any) {
       throw error;
     }
@@ -65,7 +68,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (Platform.OS === 'web') {
         // Web platform: use Firebase popup
         const provider = new GoogleAuthProvider();
-        await signInWithPopup(auth, provider);
+        const result = await signInWithPopup(auth, provider);
+        // Utwórz dokument użytkownika w Firestore (jeśli to nowy użytkownik)
+        await createUserDocument(result.user);
       } else {
         // Native platforms: use Google Sign-In SDK
         // Check if your device supports Google Play
@@ -83,7 +88,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const googleCredential = GoogleAuthProvider.credential(idToken);
         
         // Sign-in the user with the credential
-        await signInWithCredential(auth, googleCredential);
+        const result = await signInWithCredential(auth, googleCredential);
+        // Utwórz dokument użytkownika w Firestore (jeśli to nowy użytkownik)
+        await createUserDocument(result.user);
       }
     } catch (error: any) {
       console.error('Google Sign-In Error:', error);

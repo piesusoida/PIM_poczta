@@ -1,9 +1,18 @@
 import { StyleSheet } from 'react-native';
+import { Redirect } from 'expo-router';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function TabOneScreen() {
+  const { user, loading } = useAuth();
+
+  // Redirect to login if not authenticated
+  if (!loading && !user) {
+    return <Redirect href="/(auth)/login" />;
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Tab One</Text>
