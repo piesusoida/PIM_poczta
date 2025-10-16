@@ -8,6 +8,7 @@ import 'react-native-reanimated';
 import { PaperProvider } from 'react-native-paper';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -50,14 +51,16 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <PaperProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-        </Stack>
-      </ThemeProvider>
-    </PaperProvider>
+    <AuthProvider>
+      <PaperProvider>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+          </Stack>
+        </ThemeProvider>
+      </PaperProvider>
+    </AuthProvider>
   );
 }
