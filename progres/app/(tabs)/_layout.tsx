@@ -56,6 +56,7 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: "",
+          headerShown: false,
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="account" color={color} />
           ),
@@ -75,6 +76,7 @@ export default function TabLayout() {
         name="stats"
         options={{
           title: "",
+          headerShown: false,
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="chart-line" color={color} />
           ),
