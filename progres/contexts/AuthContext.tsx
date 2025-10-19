@@ -14,6 +14,7 @@ import { auth } from "@/config/firebase";
 import { createUserDocument } from "@/config/firestore";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
+import { makeRedirectUri } from "expo-auth-session";
 
 // Ensure the in-app browser completes the auth session when the app resumes
 WebBrowser.maybeCompleteAuthSession();
@@ -42,6 +43,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       "713817509365-cuvoc08getdaur4at7nk418feadaaet5.apps.googleusercontent.com",
     clientId:
       "713817509365-egnl2ql585bmvhhu9oqqb9ehd60vg3u8.apps.googleusercontent.com",
+    // Force native redirect to use our app scheme from app.json ("progres")
+    redirectUri: makeRedirectUri({ scheme: "progres" }),
+    usePKCE: true,
   });
 
   useEffect(() => {
