@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "713817509365",
+    "project_id": "progres-e78f1",
+    "storage_bucket": "progres-e78f1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:713817509365:android:e385774b6277425331e4bc",
+        "android_client_info": {
+          "package_name": "com.pwr.progress"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "713817509365-cuvoc08getdaur4at7nk418feadaaet5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pwr.progress",
+            "certificate_hash": "cb2ccc144ab45bda99dcac1ea1c745735b0dc4c5"
+          }
+        },
+        {
+          "client_id": "713817509365-egnl2ql585bmvhhu9oqqb9ehd60vg3u8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA90XVOsi8i5Z3UhmOyUPMDgLN-Bmc9zXA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "713817509365-egnl2ql585bmvhhu9oqqb9ehd60vg3u8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
