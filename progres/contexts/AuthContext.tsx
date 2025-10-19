@@ -15,6 +15,7 @@ import { createUserDocument } from "@/config/firestore";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 
+// Ensure the in-app browser completes the auth session when the app resumes
 WebBrowser.maybeCompleteAuthSession();
 
 interface AuthContextType {
@@ -33,7 +34,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   // Configure Google authentication with Expo
+  // Configure platform-specific OAuth client IDs
+  // androidClientId comes from google-services.json (oauth_client with client_type 1)
+  // clientId is the Web Client ID (used on web)
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
+    androidClientId:
+      "713817509365-cuvoc08getdaur4at7nk418feadaaet5.apps.googleusercontent.com",
     clientId:
       "713817509365-egnl2ql585bmvhhu9oqqb9ehd60vg3u8.apps.googleusercontent.com",
   });

@@ -1,0 +1,21 @@
+# EAS packaging ignore rules
+
+# If present, EAS uses this file instead of .gitignore when creating the tarball for the build.
+
+# Keep node_modules and build outputs excluded to shrink upload size.
+
+node_modules
+.expo
+dist
+web-build
+
+# Allow native folders to be generated on the server (managed workflow)
+
+ios
+android
+
+# Do NOT ignore google-services.json so it gets uploaded to EAS
+
+# (We keep it in the repo and ensure it's packaged for builds.)
+
+# Intentionally no rule to exclude google-services.json here.
