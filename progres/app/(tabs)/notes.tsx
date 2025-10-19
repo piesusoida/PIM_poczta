@@ -38,11 +38,6 @@ export default function NotesScreen() {
   const [deleteDialogVisible, setDeleteDialogVisible] = useState(false);
   const [noteToDelete, setNoteToDelete] = useState<string | null>(null);
 
-  // Redirect to login if not authenticated
-  if (!loading && !user) {
-    return <Redirect href="/(auth)/login" />;
-  }
-
   // Load notes when screen comes into focus
   useFocusEffect(
     useCallback(() => {
@@ -51,6 +46,11 @@ export default function NotesScreen() {
       }
     }, [user])
   );
+
+  // Redirect to login if not authenticated (after hooks to keep hook order stable)
+  if (!loading && !user) {
+    return <Redirect href="/(auth)/login" />;
+  }
 
   const loadNotes = async () => {
     try {
@@ -184,6 +184,7 @@ export default function NotesScreen() {
             renderItem={renderNoteItem}
             keyExtractor={(item) => item.id}
             contentContainerStyle={styles.listContent}
+            showsVerticalScrollIndicator={false}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }

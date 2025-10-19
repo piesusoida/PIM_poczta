@@ -7,6 +7,7 @@ import {
 import { useFonts } from "expo-font";
 import { Stack, Redirect } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
+import * as SystemUI from "expo-system-ui";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import { PaperProvider } from "react-native-paper";
@@ -58,6 +59,19 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+
+  // Set system UI colors based on theme
+  useEffect(() => {
+    const setSystemUIColors = async () => {
+      if (colorScheme === "dark") {
+        await SystemUI.setBackgroundColorAsync("#000000");
+      } else {
+        await SystemUI.setBackgroundColorAsync("#ffffff");
+      }
+    };
+
+    setSystemUIColors();
+  }, [colorScheme]);
 
   return (
     <AuthProvider>

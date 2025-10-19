@@ -16,6 +16,8 @@ function TabBarIcon(props: {
 export default function TabLayout() {
   const theme = useTheme();
   const { user, loading } = useAuth();
+  // Call all hooks before any early returns to keep hook order stable
+  const headerShown = useClientOnlyValue(false, true);
 
   // Redirect to login if not authenticated
   if (!loading && !user) {
@@ -39,7 +41,7 @@ export default function TabLayout() {
           fontSize: 12,
           fontWeight: "500",
         },
-        headerShown: useClientOnlyValue(false, true),
+        headerShown,
         headerStyle: {
           backgroundColor: theme.colors.surface,
         },
