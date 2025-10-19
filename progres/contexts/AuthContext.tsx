@@ -12,12 +12,10 @@ import {
 } from "firebase/auth";
 import { auth } from "@/config/firebase";
 import { createUserDocument } from "@/config/firestore";
-import * as WebBrowser from "expo-web-browser";
-import * as Google from "expo-auth-session/providers/google";
-import { makeRedirectUri } from "expo-auth-session";
-
-// Ensure the in-app browser completes the auth session when the app resumes
-WebBrowser.maybeCompleteAuthSession();
+import {
+  GoogleSignin,
+  statusCodes,
+} from "@react-native-google-signin/google-signin";
 
 interface AuthContextType {
   user: User | null;
@@ -34,19 +32,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Configure Google authentication with Expo
-  // Configure platform-specific OAuth client IDs
-  // androidClientId comes from google-services.json (oauth_client with client_type 1)
-  // clientId is the Web Client ID (used on web)
-  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-    androidClientId:
-      "713817509365-cuvoc08getdaur4at7nk418feadaaet5.apps.googleusercontent.com",
-    clientId:
-      "713817509365-egnl2ql585bmvhhu9oqqb9ehd60vg3u8.apps.googleusercontent.com",
-    // Force native redirect to use our app scheme from app.json ("progres")
-    redirectUri: makeRedirectUri({ scheme: "progres" }),
-    usePKCE: true,
-  });
+  // Configure Google Sign-In for native (Android/iOS). For Firebase Auth we only need the Web Client ID.
+  useEffect(() => {
+    if (Platform.OS !== "web") {
+      GoogleSignin.configure({
+        webClientId:
+          "713817509365-egnl2ql585bmvhhu9oqqb9ehd60vg3u8.apps.googleusercontent.com",
+        offlineAccess: false,
+        forceCodeForRefreshToken: false,
+        scopes: ["profile", "email"],
+      });
+    }
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -56,21 +53,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     return unsubscribe;
   }, []);
-
-  useEffect(() => {
-    if (response?.type === "success") {
-      const { id_token } = response.params;
-
-      const credential = GoogleAuthProvider.credential(id_token);
-      signInWithCredential(auth, credential)
-        .then((result) => {
-          createUserDocument(result.user);
-        })
-        .catch((error) => {
-          console.error("Error signing in with Google:", error);
-        });
-    }
-  }, [response]);
 
   const signIn = async (email: string, password: string) => {
     try {
@@ -100,14 +82,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Web platform: use Firebase popup
         const provider = new GoogleAuthProvider();
         const result = await signInWithPopup(auth, provider);
-        // Utwórz dokument użytkownika w Firestore (jeśli to nowy użytkownik)
+        // Create user document in Firestore (if new)
         await createUserDocument(result.user);
       } else {
-        // Native platforms: use Expo AuthSession
-        await promptAsync();
+        // Native platforms: use react-native-google-signin
+        await GoogleSignin.hasPlayServices({
+          showPlayServicesUpdateDialog: true,
+        });
+        const signInResult = await GoogleSignin.signIn();
+        // Obtain tokens in a version-agnostic way
+        const tokens = await GoogleSignin.getTokens();
+        const idToken =
+          (tokens as any)?.idToken ??
+          (signInResult as any)?.idToken ??
+          (signInResult as any)?.data?.idToken;
+        if (!idToken) throw new Error("Google Sign-In failed: missing idToken");
+
+        const credential = GoogleAuthProvider.credential(idToken);
+        const result = await signInWithCredential(auth, credential);
+        await createUserDocument(result.user);
       }
     } catch (error: any) {
-      console.error("Google Sign-In Error:", error);
+      // Handle common Google Sign-In status codes gracefully
+      if (error?.code === statusCodes.SIGN_IN_CANCELLED) return; // user cancelled
+      if (error?.code === statusCodes.IN_PROGRESS) return; // already in progress
+      if (error?.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        console.error("Google Play Services not available or outdated.");
+      } else {
+        console.error("Google Sign-In Error:", error);
+      }
       throw error;
     }
   };
