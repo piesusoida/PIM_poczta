@@ -17,10 +17,7 @@ import {
 } from "react-native-paper";
 import { Redirect, useFocusEffect } from "expo-router";
 import { useAuth } from "@/contexts/AuthContext";
-import {
-  getUserWorkoutNotes,
-  WorkoutNoteWithId,
-} from "@/config/firestore";
+import { getUserWorkoutNotes, WorkoutNoteWithId } from "@/config/firestore";
 import { LineChart } from "react-native-chart-kit";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
@@ -43,11 +40,6 @@ export default function StatsScreen() {
   const [chartType, setChartType] = useState<ChartType>("weight");
   const [exerciseMenuVisible, setExerciseMenuVisible] = useState(false);
 
-  // Redirect to login if not authenticated
-  if (!loading && !user) {
-    return <Redirect href="/(auth)/login" />;
-  }
-
   // Load notes when screen comes into focus
   useFocusEffect(
     useCallback(() => {
@@ -56,6 +48,11 @@ export default function StatsScreen() {
       }
     }, [user])
   );
+
+  // Redirect to login if not authenticated (after hooks to keep hook order stable)
+  if (!loading && !user) {
+    return <Redirect href="/(auth)/login" />;
+  }
 
   const loadData = async () => {
     try {
