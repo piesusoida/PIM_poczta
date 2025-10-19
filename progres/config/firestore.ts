@@ -221,3 +221,35 @@ export const updateWorkoutNote = async (noteId: string, noteData: Omit<WorkoutNo
     throw error;
   }
 };
+
+export const getUserProfile = async (userId: string): Promise<{ username: string; email: string } | null> => {
+  try {
+    const userRef = doc(db, 'users', userId);
+    const userDoc = await getDoc(userRef);
+    
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      return {
+        username: userData.username || '',
+        email: userData.email || '',
+      };
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    throw error;
+  }
+};
+
+export const updateUsername = async (userId: string, username: string): Promise<void> => {
+  try {
+    const userRef = doc(db, 'users', userId);
+    await updateDoc(userRef, {
+      username: username.trim(),
+    });
+  } catch (error) {
+    console.error('Error updating username:', error);
+    throw error;
+  }
+};
