@@ -45,7 +45,6 @@ export default function ProfileScreen() {
     }, [user])
   );
 
-  // Redirect to login if not authenticated (after hooks to keep hook order stable)
   if (!loading && !user) {
     return <Redirect href="/(auth)/login" />;
   }

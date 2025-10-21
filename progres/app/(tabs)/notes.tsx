@@ -39,7 +39,6 @@ export default function NotesScreen() {
   const [deleteDialogVisible, setDeleteDialogVisible] = useState(false);
   const [noteToDelete, setNoteToDelete] = useState<string | null>(null);
 
-  // Load notes when screen comes into focus
   useFocusEffect(
     useCallback(() => {
       if (user) {
@@ -48,7 +47,6 @@ export default function NotesScreen() {
     }, [user])
   );
 
-  // Redirect to login if not authenticated (after hooks to keep hook order stable)
   if (!loading && !user) {
     return <Redirect href="/(auth)/login" />;
   }
@@ -118,13 +116,7 @@ export default function NotesScreen() {
   const renderNoteItem = ({ item }: { item: WorkoutNoteWithId }) => (
     <Card style={styles.noteCard}>
       <Card.Content style={styles.noteCardContent}>
-        <TouchableOpacity
-          style={styles.noteInfo}
-          onPress={() => {
-            // Navigate to note details if you want
-            // router.push(`/note/${item.id}`);
-          }}
-        >
+        <TouchableOpacity style={styles.noteInfo}>
           <View>
             <Text variant="titleMedium" style={styles.noteTitle}>
               {item.title}
@@ -193,7 +185,7 @@ export default function NotesScreen() {
         )}
       </View>
 
-      {/* FAB - Add Note Button */}
+      {/* Add Note Button */}
       <FAB
         icon="plus"
         style={styles.fab}

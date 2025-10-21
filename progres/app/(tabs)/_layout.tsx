@@ -21,7 +21,6 @@ export default function TabLayout() {
   // Call all hooks before any early returns to keep hook order stable
   const headerShown = useClientOnlyValue(false, true);
 
-  // Redirect to login if not authenticated
   if (!loading && !user) {
     return <Redirect href="/(auth)/login" />;
   }
