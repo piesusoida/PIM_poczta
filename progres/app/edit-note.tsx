@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
-  SafeAreaView,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -21,6 +20,7 @@ import {
   Dialog,
   Paragraph,
 } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { DatePickerModal } from "react-native-paper-dates";
 import {

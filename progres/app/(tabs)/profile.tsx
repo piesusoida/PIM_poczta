@@ -13,6 +13,7 @@ import {
   Button,
 } from "react-native-paper";
 import { Redirect, router, useFocusEffect } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   getUserWorkoutNotes,
@@ -174,9 +175,12 @@ export default function ProfileScreen() {
   };
   if (loading || loadingData) {
     return (
-      <View style={[styles.container, styles.centerContent]}>
+      <SafeAreaView
+        style={[styles.container, styles.centerContent]}
+        edges={["top"]}
+      >
         <ActivityIndicator size="large" color={theme.colors.primary} />
-      </View>
+      </SafeAreaView>
     );
   }
 
@@ -185,177 +189,185 @@ export default function ProfileScreen() {
   const totalWorkouts = notes.length;
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        {/* Profile Header */}
-        <Card style={styles.profileCard}>
-          <Card.Content style={styles.profileContent}>
-            <View style={styles.profileHeader}>
-              {user?.photoURL ? (
-                <Avatar.Image size={80} source={{ uri: user.photoURL }} />
-              ) : (
-                <Avatar.Icon size={80} icon="account" />
-              )}
-              <View style={styles.profileInfo}>
-                <View style={styles.usernameContainer}>
-                  <Text variant="headlineSmall" style={styles.username}>
-                    {username}
+    <SafeAreaView style={styles.container} edges={["top"]}>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.content}>
+          {/* Profile Header */}
+          <Card style={styles.profileCard}>
+            <Card.Content style={styles.profileContent}>
+              <View style={styles.profileHeader}>
+                {user?.photoURL ? (
+                  <Avatar.Image size={80} source={{ uri: user.photoURL }} />
+                ) : (
+                  <Avatar.Icon size={80} icon="account" />
+                )}
+                <View style={styles.profileInfo}>
+                  <View style={styles.usernameContainer}>
+                    <Text variant="headlineSmall" style={styles.username}>
+                      {username}
+                    </Text>
+                    <IconButton
+                      icon="pencil"
+                      size={20}
+                      onPress={handleEditUsername}
+                      iconColor={theme.colors.primary}
+                    />
+                  </View>
+                  <Text variant="bodyMedium" style={styles.email}>
+                    {user?.email}
                   </Text>
-                  <IconButton
-                    icon="pencil"
-                    size={20}
-                    onPress={handleEditUsername}
-                    iconColor={theme.colors.primary}
-                  />
                 </View>
-                <Text variant="bodyMedium" style={styles.email}>
-                  {user?.email}
-                </Text>
               </View>
-            </View>
-          </Card.Content>
-        </Card>
+            </Card.Content>
+          </Card>
 
-        {/* Personal stats */}
-        <Card style={styles.statsCard}>
-          <Card.Content>
-            <View style={styles.statsRow}>
-              <View style={styles.statItem}>
-                <Text variant="headlineMedium" style={styles.statValue}>
-                  {totalWorkouts}
-                </Text>
-                <Text variant="bodyMedium" style={styles.statLabel}>
-                  Workouts
-                </Text>
+          {/* Personal stats */}
+          <Card style={styles.statsCard}>
+            <Card.Content>
+              <View style={styles.statsRow}>
+                <View style={styles.statItem}>
+                  <Text variant="headlineMedium" style={styles.statValue}>
+                    {totalWorkouts}
+                  </Text>
+                  <Text variant="bodyMedium" style={styles.statLabel}>
+                    Workouts
+                  </Text>
+                </View>
+                <View style={styles.statItem}>
+                  <Text variant="headlineMedium" style={styles.statValue}>
+                    {streak}
+                  </Text>
+                  <Text variant="bodyMedium" style={styles.statLabel}>
+                    Week Streak
+                  </Text>
+                </View>
               </View>
-              <View style={styles.statItem}>
-                <Text variant="headlineMedium" style={styles.statValue}>
-                  {streak}
-                </Text>
-                <Text variant="bodyMedium" style={styles.statLabel}>
-                  Week Streak
-                </Text>
-              </View>
-            </View>
-          </Card.Content>
-        </Card>
+            </Card.Content>
+          </Card>
 
-        {/* Training Calendar*/}
-        <Card style={styles.calendarCard}>
-          <Card.Content>
-            <Text variant="titleLarge" style={styles.sectionTitle}>
-              Training Calendar
-            </Text>
-            <Text variant="bodySmall" style={styles.calendarSubtitle}>
-              Last 12 weeks
-            </Text>
+          {/* Training Calendar*/}
+          <Card style={styles.calendarCard}>
+            <Card.Content>
+              <Text variant="titleLarge" style={styles.sectionTitle}>
+                Training Calendar
+              </Text>
+              <Text variant="bodySmall" style={styles.calendarSubtitle}>
+                Last 12 weeks
+              </Text>
 
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              style={styles.calendarScroll}
-            >
-              <View>
-                <View style={styles.calendarContainer}>
-                  <View style={styles.dayLabelsColumn}>
-                    {["Mon", "", "Wed", "", "Fri", "", "Sun"].map(
-                      (day, index) => (
-                        <View key={index} style={styles.dayLabelContainer}>
-                          <Text variant="labelSmall" style={styles.dayLabel}>
-                            {day}
-                          </Text>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={styles.calendarScroll}
+              >
+                <View>
+                  <View style={styles.calendarContainer}>
+                    <View style={styles.dayLabelsColumn}>
+                      {["Mon", "", "Wed", "", "Fri", "", "Sun"].map(
+                        (day, index) => (
+                          <View key={index} style={styles.dayLabelContainer}>
+                            <Text variant="labelSmall" style={styles.dayLabel}>
+                              {day}
+                            </Text>
+                          </View>
+                        )
+                      )}
+                    </View>
+
+                    <View style={styles.calendarGrid}>
+                      {trainingCalendar.map((weekdayRow, rowIndex) => (
+                        <View key={rowIndex} style={styles.weekdayRow}>
+                          {weekdayRow.map((day, dayIndex) => (
+                            <View
+                              key={`${rowIndex}-${dayIndex}`}
+                              style={[
+                                styles.daySquare,
+                                day.hasTraining && styles.daySquareActive,
+                                !day.hasTraining && styles.daySquareInactive,
+                              ]}
+                            />
+                          ))}
                         </View>
-                      )
-                    )}
-                  </View>
-
-                  <View style={styles.calendarGrid}>
-                    {trainingCalendar.map((weekdayRow, rowIndex) => (
-                      <View key={rowIndex} style={styles.weekdayRow}>
-                        {weekdayRow.map((day, dayIndex) => (
-                          <View
-                            key={`${rowIndex}-${dayIndex}`}
-                            style={[
-                              styles.daySquare,
-                              day.hasTraining && styles.daySquareActive,
-                              !day.hasTraining && styles.daySquareInactive,
-                            ]}
-                          />
-                        ))}
-                      </View>
-                    ))}
+                      ))}
+                    </View>
                   </View>
                 </View>
+              </ScrollView>
+
+              <View style={styles.legendContainer}>
+                <View style={styles.legendItem}>
+                  <View
+                    style={[styles.legendSquare, styles.daySquareInactive]}
+                  />
+                  <Text variant="bodySmall" style={styles.legendText}>
+                    No training
+                  </Text>
+                </View>
+                <View style={styles.legendItem}>
+                  <View style={[styles.legendSquare, styles.daySquareActive]} />
+                  <Text variant="bodySmall" style={styles.legendText}>
+                    Training
+                  </Text>
+                </View>
               </View>
-            </ScrollView>
+            </Card.Content>
+          </Card>
 
-            <View style={styles.legendContainer}>
-              <View style={styles.legendItem}>
-                <View style={[styles.legendSquare, styles.daySquareInactive]} />
-                <Text variant="bodySmall" style={styles.legendText}>
-                  No training
-                </Text>
-              </View>
-              <View style={styles.legendItem}>
-                <View style={[styles.legendSquare, styles.daySquareActive]} />
-                <Text variant="bodySmall" style={styles.legendText}>
-                  Training
-                </Text>
-              </View>
-            </View>
-          </Card.Content>
-        </Card>
+          <Button
+            mode="outlined"
+            onPress={() => setLogoutDialogVisible(true)}
+            style={styles.logoutButton}
+            textColor="#ef5350"
+            icon="logout"
+          >
+            Sign Out
+          </Button>
+        </View>
 
-        <Button
-          mode="outlined"
-          onPress={() => setLogoutDialogVisible(true)}
-          style={styles.logoutButton}
-          textColor="#ef5350"
-          icon="logout"
-        >
-          Sign Out
-        </Button>
-      </View>
+        {/* Edit Username Dialog */}
+        <Portal>
+          <Dialog
+            visible={editDialogVisible}
+            onDismiss={() => setEditDialogVisible(false)}
+          >
+            <Dialog.Title>Edit Username</Dialog.Title>
+            <Dialog.Content>
+              <TextInput
+                label="Username"
+                value={tempUsername}
+                onChangeText={setTempUsername}
+                mode="outlined"
+                autoFocus
+              />
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={() => setEditDialogVisible(false)}>
+                Cancel
+              </Button>
+              <Button onPress={handleSaveUsername}>Save</Button>
+            </Dialog.Actions>
+          </Dialog>
 
-      {/* Edit Username Dialog */}
-      <Portal>
-        <Dialog
-          visible={editDialogVisible}
-          onDismiss={() => setEditDialogVisible(false)}
-        >
-          <Dialog.Title>Edit Username</Dialog.Title>
-          <Dialog.Content>
-            <TextInput
-              label="Username"
-              value={tempUsername}
-              onChangeText={setTempUsername}
-              mode="outlined"
-              autoFocus
-            />
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={() => setEditDialogVisible(false)}>Cancel</Button>
-            <Button onPress={handleSaveUsername}>Save</Button>
-          </Dialog.Actions>
-        </Dialog>
-
-        <Dialog
-          visible={logoutDialogVisible}
-          onDismiss={() => setLogoutDialogVisible(false)}
-        >
-          <Dialog.Title>Sign Out</Dialog.Title>
-          <Dialog.Content>
-            <Text variant="bodyMedium">Are you sure you want to sign out?</Text>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={() => setLogoutDialogVisible(false)}>
-              Cancel
-            </Button>
-            <Button onPress={handleLogout}>Sign Out</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
-    </ScrollView>
+          <Dialog
+            visible={logoutDialogVisible}
+            onDismiss={() => setLogoutDialogVisible(false)}
+          >
+            <Dialog.Title>Sign Out</Dialog.Title>
+            <Dialog.Content>
+              <Text variant="bodyMedium">
+                Are you sure you want to sign out?
+              </Text>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={() => setLogoutDialogVisible(false)}>
+                Cancel
+              </Button>
+              <Button onPress={handleLogout}>Sign Out</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -363,6 +375,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#1c1b1f",
+  },
+  scrollView: {
+    flex: 1,
   },
   centerContent: {
     justifyContent: "center",

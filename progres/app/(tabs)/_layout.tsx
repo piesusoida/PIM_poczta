@@ -2,6 +2,7 @@ import React from "react";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Tabs, Redirect } from "expo-router";
 import { useTheme } from "react-native-paper";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
 import { useAuth } from "@/contexts/AuthContext";
@@ -16,6 +17,7 @@ function TabBarIcon(props: {
 export default function TabLayout() {
   const theme = useTheme();
   const { user, loading } = useAuth();
+  const insets = useSafeAreaInsets();
   // Call all hooks before any early returns to keep hook order stable
   const headerShown = useClientOnlyValue(false, true);
 
@@ -33,8 +35,8 @@ export default function TabLayout() {
           backgroundColor: theme.colors.surface,
           borderTopColor: theme.colors.outline,
           borderTopWidth: 1,
-          height: 60,
-          paddingBottom: 8,
+          height: 60 + insets.bottom,
+          paddingBottom: insets.bottom + 8,
           paddingTop: 8,
         },
         tabBarLabelStyle: {

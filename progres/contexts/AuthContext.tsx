@@ -69,7 +69,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         email,
         password
       );
-      // Utwórz dokument użytkownika w Firestore
       await createUserDocument(userCredential.user);
     } catch (error: any) {
       throw error;
@@ -82,7 +81,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Web platform: use Firebase popup
         const provider = new GoogleAuthProvider();
         const result = await signInWithPopup(auth, provider);
-        // Create user document in Firestore (if new)
         await createUserDocument(result.user);
       } else {
         // Native platforms: use react-native-google-signin
@@ -103,7 +101,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await createUserDocument(result.user);
       }
     } catch (error: any) {
-      // Handle common Google Sign-In status codes gracefully
       if (error?.code === statusCodes.SIGN_IN_CANCELLED) return; // user cancelled
       if (error?.code === statusCodes.IN_PROGRESS) return; // already in progress
       if (error?.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {

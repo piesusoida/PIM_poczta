@@ -19,6 +19,7 @@ import {
   useTheme,
 } from "react-native-paper";
 import { useRouter, Redirect, useFocusEffect } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   getUserWorkoutNotes,
@@ -153,16 +154,16 @@ export default function NotesScreen() {
 
   if (loadingNotes) {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container} edges={["top"]}>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" />
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={["top"]}>
       <View style={styles.content}>
         {/* Header */}
         <View style={styles.headerContainer}>
@@ -227,7 +228,7 @@ export default function NotesScreen() {
           </Dialog.Actions>
         </Dialog>
       </Portal>
-    </View>
+    </SafeAreaView>
   );
 }
 

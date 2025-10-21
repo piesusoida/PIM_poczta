@@ -13,6 +13,7 @@ import "react-native-reanimated";
 import { PaperProvider } from "react-native-paper";
 import { ActivityIndicator, View, StyleSheet } from "react-native";
 import { enGB, registerTranslation } from "react-native-paper-dates";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { useColorScheme } from "@/components/useColorScheme";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
@@ -74,15 +75,17 @@ function RootLayoutNav() {
   }, [colorScheme]);
 
   return (
-    <AuthProvider>
-      <PaperProvider>
-        <ThemeProvider
-          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-        >
-          <AuthenticatedLayout />
-        </ThemeProvider>
-      </PaperProvider>
-    </AuthProvider>
+    <SafeAreaProvider>
+      <AuthProvider>
+        <PaperProvider>
+          <ThemeProvider
+            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+          >
+            <AuthenticatedLayout />
+          </ThemeProvider>
+        </PaperProvider>
+      </AuthProvider>
+    </SafeAreaProvider>
   );
 }
 

@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { View, StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
 import {
   Text,
   TextInput as PaperTextInput,
@@ -17,6 +11,7 @@ import {
   Dialog,
   Paragraph,
 } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/contexts/AuthContext";
 

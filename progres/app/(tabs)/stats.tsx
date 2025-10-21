@@ -16,6 +16,7 @@ import {
   RadioButton,
 } from "react-native-paper";
 import { Redirect, useFocusEffect } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "@/contexts/AuthContext";
 import { getUserWorkoutNotes, WorkoutNoteWithId } from "@/config/firestore";
 import { LineChart } from "react-native-chart-kit";
@@ -193,11 +194,11 @@ export default function StatsScreen() {
 
   if (loadingNotes) {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container} edges={["top"]}>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" />
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 
@@ -207,7 +208,7 @@ export default function StatsScreen() {
   const sumOfWeight = getSumOfWeight();
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={["top"]}>
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.headerContainer}>
           <Text variant="headlineMedium" style={styles.headerText}>
@@ -451,7 +452,7 @@ export default function StatsScreen() {
           </>
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
