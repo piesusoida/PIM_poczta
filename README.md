@@ -2,7 +2,7 @@
 
 ## Overview
 
-Progress is a mobile application designed for tracking and recording strength training workouts. It also allows users to analyze the entered data through clear charts and statistics.
+Progress is a mobile application designed for tracking and recording strength training workouts. It also allows users to analyze the entered data through clear charts and statistics. App has been written in React-Native and build to .apk by [eas](https://expo.dev/eas).
 
 ## Mockup
 
